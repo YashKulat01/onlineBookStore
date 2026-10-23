@@ -1,5 +1,6 @@
 import React from 'react'
 import './NavBar.css'
+import { Link } from 'react-router-dom'
 
 export default function NavBar() {
     return (
@@ -7,35 +8,30 @@ export default function NavBar() {
             <nav class="navbar navbar-expand-lg navbar-dark bg-success">
                 <div class="container-fluid">
                     <div className="logo">
-                        <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            width="26"
-                            height="26"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
+                        <svg aria-hidden="true" viewBox="0 0 24 24" width="26"
+                            height="26" fill="none" stroke="currentColor"
+                            strokeWidth="1.8" strokeLinecap="round"
+                            strokeLinejoin="round">
                             <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z" />
                             <path d="M4 5.5v16M8 7h8M8 11h8" />
                         </svg>
                     </div>
+
                     <a class="navbar-brand" href="#">Book Next</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
+
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                <Link class="nav-link active" aria-current="page" to="/">Home</Link>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">About</a>
+                                <Link class="nav-link active" to="/about">About</Link>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Contact</a>
+                                <Link class="nav-link active" to="/contact">Contact</Link>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
