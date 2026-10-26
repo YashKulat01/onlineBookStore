@@ -1,0 +1,22 @@
+.card{
+    padding: 6%;
+    border: none;
+    background-color: #f2f7f3;
+}
+
+.card> img{
+    height: 250px;
+    border-radius: 15px;
+}
+
+.card-body{
+    padding-left: 0;
+    padding-bottom: 0;
+}
+
+
+@media (max-width: 520px) {
+  .card>img {
+    width: 100%;
+  }
+}
