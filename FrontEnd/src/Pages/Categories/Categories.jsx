@@ -1,5 +1,6 @@
 import React from 'react'
 import '../Categories/Categories.css';
+import Sidebar from '../../Components/Categories/SideBar/SideBar';
 
 export default function Categories() {
   return (
@@ -7,7 +8,7 @@ export default function Categories() {
         <div className="main">
             {/* Side bar container */}
             <div className="sidbarCont">
-                This is sidebar
+                <Sidebar/>
             </div>
 
             {/* Category container */}
