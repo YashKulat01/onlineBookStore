@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.book_next.dtos.UserDTO;
 import com.book_next.entities.Role;
@@ -20,6 +21,8 @@ import com.book_next.services.UserService;
 /**
  * THIS IS USER SERVICE IMPLEMENTATION CLASS
  */
+
+@Service
 public class UserServiceImpls implements UserService {
 
 	@Autowired
@@ -34,7 +37,6 @@ public class UserServiceImpls implements UserService {
 //	REGISTER USER SECTION---------------------------------------------------------------------
 	@Override
 	public UserDTO registerUser(UserDTO userDTO) {
-		// TODO Auto-generated method stub
 
 		User user = modelMapper.map(userDTO, User.class);
 
@@ -52,27 +54,35 @@ public class UserServiceImpls implements UserService {
 //	GET ALL USERS SECTIONS--------------------------------------------------------------------
 	@Override
 	public List<UserDTO> getAllUsers() {
-		// TODO Auto-generated method stub
+
 		return userRepository.findAll().stream().map(t -> modelMapper.map(t, UserDTO.class)).toList();
 	}
 //	------------------------------------------------------------------------------------------
 
+//	GET USER BY ROLE SECTION------------------------------------------------------------------
 	@Override
 	public List<UserDTO> getUsersByRole(Role role) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return userRepository.getUserByRole(role).stream().map(t -> modelMapper.map(t, UserDTO.class)).toList();
 	}
+//	------------------------------------------------------------------------------------------
 
+// REMOVE USER SECTION------------------------------------------------------------------------
 	@Override
 	public void removeUser(String email) {
-		// TODO Auto-generated method stub
+		
+		User removedUser = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found !!"));
+		userRepository.delete(removedUser);
 
 	}
+//	------------------------------------------------------------------------------------------
 
+//	FIND USER SECTION-------------------------------------------------------------------------
 	@Override
 	public UserDTO findByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found !!!"));
+		return modelMapper.map(user, UserDTO.class);
 	}
-
+//	------------------------------------------------------------------------------------------
 }
