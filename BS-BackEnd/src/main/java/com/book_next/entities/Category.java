@@ -3,8 +3,12 @@
  */
 package com.book_next.entities;
 
-import com.book_next.enums.BookCategory;
+import java.util.List;
 
+import com.book_next.enums.BookCategory;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +16,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,5 +39,8 @@ public class Category {
 	@Column(unique = true, nullable = false)
 	private BookCategory bookCategory;
 	
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<Book> books;
 	
 }
