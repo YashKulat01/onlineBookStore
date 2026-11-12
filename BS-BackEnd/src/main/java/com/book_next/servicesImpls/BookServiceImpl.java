@@ -8,6 +8,7 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.book_next.dtos.BookDTO;
 import com.book_next.entities.Book;
@@ -17,6 +18,7 @@ import com.book_next.exceptions.NotFoundException;
 import com.book_next.repositories.BookCategoryRepository;
 import com.book_next.repositories.BookRepository;
 import com.book_next.services.BookService;
+import com.book_next.services.FileService;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,15 +43,26 @@ public class BookServiceImpl implements BookService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private FileService fileService;
+	
+	private final String path = "uploads/books/";
+	
 //	ADD BOOK SECTION------------------------------------------------------------------------------
 	@Override
-	public BookDTO addBook(BookDTO bookDTO) {
+	public BookDTO addBook(BookDTO bookDTO , MultipartFile image) {
 
 		Book book = modelMapper.map(bookDTO, Book.class);
 
-		Category bookCategory = bookCategoryRepository.findByBookCategory(bookDTO.getBookCategory()).orElseThrow(() -> new NotFoundException("Book category not found !!"));
+		Category bookCategory = bookCategoryRepository.findByBookCategory(bookDTO.getBookCategory())
+				.orElseThrow(() -> new NotFoundException("Book category not found !!"));
+		
 		book.setCategory(bookCategory);
 
+		String imgName = fileService.uploadFile(image, path);
+		
+		book.setBookImage(imgName);
+		
 		Book savedBook = bookRepository.save(book);
 
 		return modelMapper.map(savedBook, BookDTO.class);
@@ -60,7 +73,8 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public List<BookDTO> getBooksByCategory(BookCategory bookCategory) {
 
-		return bookRepository.findByCategory_BookCategory(bookCategory).stream().map(t -> modelMapper.map(t, BookDTO.class)).toList();
+		return bookRepository.findByCategory_BookCategory(bookCategory).stream()
+				.map(t -> modelMapper.map(t, BookDTO.class)).toList();
 	}
 // -----------------------------------------------------------------------------------------------
 
@@ -76,10 +90,21 @@ public class BookServiceImpl implements BookService {
 	@Override
 	@Transactional
 	public void deleteBook(String bookName) {
-		
-		Book removedBook = bookRepository.findByBookTitle(bookName).orElseThrow(() -> new NotFoundException("Book not found !!"));
-		
+
+		Book removedBook = bookRepository.findByBookTitle(bookName)
+				.orElseThrow(() -> new NotFoundException("Book not found !!"));
+
 		bookRepository.delete(removedBook);
+	}
+// -----------------------------------------------------------------------------------------------
+
+//	GET BOOK BY ID SECTION -----------------------------------------------------------------------
+	@Override
+	public BookDTO getBookById(int id) {
+
+		Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book Not found !!"));
+		
+		return modelMapper.map(book, BookDTO.class);
 	}
 // -----------------------------------------------------------------------------------------------
 
