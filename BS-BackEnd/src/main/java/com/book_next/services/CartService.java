@@ -14,7 +14,7 @@ public interface CartService {
 	
 	CartDTO addToCart(Integer userId, Integer bookId, Integer quantity);
 	
-	CartDTO getCartByUserI(Integer userId);
+	CartDTO getCartByUserId(Integer userId);
 	
 	CartDTO removeFromCart(Integer userId, Integer bookId);
 	
