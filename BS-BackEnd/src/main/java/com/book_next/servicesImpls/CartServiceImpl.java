@@ -57,7 +57,7 @@ public class CartServiceImpl implements CartService {
 				.findFirst();
 
 		if (presentItem.isPresent()) {
-			
+
 			CartItems items = presentItem.get();
 			items.setQuantity(items.getQuantity() + quantity);
 			items.setPrice(items.getQuantity() * book.getBookPrice());
@@ -68,10 +68,37 @@ public class CartServiceImpl implements CartService {
 			items.setBook(book);
 			items.setQuantity(quantity);
 			items.setPrice(quantity * book.getBookPrice());
-			
+
 			cart.getItems().add(items);
 		}
 
+		cart.setTotalPrice(cart.getItems().stream().mapToDouble(CartItems::getPrice).sum());
+
+		Cart savedCart = cartRepository.save(cart);
+
+		return modelMapper.map(savedCart, CartDTO.class);
+	}
+
+	@Override
+	public CartDTO getCartByUserId(Integer userId) {
+
+		return cartRepository.findByUserId(userId)
+				.map(cart -> modelMapper.map(cart, CartDTO.class))
+				.orElseGet(() -> {
+					CartDTO dto = new CartDTO();
+					dto.setItems(List.of());
+					dto.setTotalPrice(0.0);
+					return dto;
+				});
+	}
+
+	@Override
+	public CartDTO removeFromCart(Integer userId, Integer bookId) {
+		
+		Cart cart = cartRepository.findById(userId).orElseThrow(() -> new NotFoundException("Cart not found !!"));
+		
+		cart.getItems().removeIf(t -> t.getBook().getBookId().equals(bookId));
+		
 		cart.setTotalPrice(cart.getItems().stream().mapToDouble(CartItems::getPrice).sum());
 		
 		Cart savedCart = cartRepository.save(cart);
@@ -80,33 +107,36 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public CartDTO getCartByUserI(Integer userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public CartDTO removeFromCart(Integer userId, Integer bookId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void clearCart(Integer userId) {
-		// TODO Auto-generated method stub
 
+		Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("Cart not found !!"));
+		
+		cart.getItems().clear();
+		cart.setTotalPrice(0.0);
+		
+		cartRepository.save(cart);
 	}
 
 	@Override
 	public List<CartDTO> getAllCarts() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<Cart> allCards = cartRepository.findAll();
+		
+		if (allCards.isEmpty()) {
+			throw new NotFoundException("Carts not found !!");
+		}
+		
+		List<CartDTO> allSavedCarts = allCards.stream().map(t -> modelMapper.map(t, CartDTO.class)).toList();
+		
+		return allSavedCarts;
 	}
 
 	@Override
 	public void deleteCart(Integer cartId) {
-		// TODO Auto-generated method stub
 
+		Cart userCart = cartRepository.findByUserId(cartId).orElseThrow(() -> new NotFoundException("Cart not found !!"));
+		
+		cartRepository.delete(userCart);
 	}
 
 }
