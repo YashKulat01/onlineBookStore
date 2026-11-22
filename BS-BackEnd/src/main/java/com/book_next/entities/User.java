@@ -3,6 +3,9 @@
  */
 package com.book_next.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -51,4 +54,7 @@ public class User {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private Cart cart;
+	
+	
+	private List<Order> orders = new ArrayList<Order>();
 }

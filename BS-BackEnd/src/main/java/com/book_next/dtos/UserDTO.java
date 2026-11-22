@@ -3,6 +3,10 @@
  */
 package com.book_next.dtos;
 
+import java.util.List;
+
+import com.book_next.entities.Cart;
+import com.book_next.entities.Order;
 import com.book_next.entities.Role;
 
 import lombok.AllArgsConstructor;
@@ -23,4 +27,6 @@ public class UserDTO {
 	private String password;
 	private String phoneNo;
 	private Role role;
+	private Cart cart;
+	private List<Order> orders;
 }
