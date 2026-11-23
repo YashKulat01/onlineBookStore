@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.book_next.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -30,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "orders")
 
 public class Order {
 	
@@ -47,7 +48,7 @@ public class Order {
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	@JsonManagedReference
+	@JsonBackReference
 	private User user;
 	
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
